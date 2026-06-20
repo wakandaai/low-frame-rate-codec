@@ -173,3 +173,8 @@ archived/
 encoded_out/
 recon/
 recons/
+
+data/
+*.out
+LibriSpeech
+run*.sh
