@@ -159,7 +159,6 @@ mprofile*
 .DS_Store
 env.sh
 _codebraid/
-**/*.html
 **/*.exec.md
 flagged/
 log.txt

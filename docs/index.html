@@ -1,0 +1,323 @@
+<!--
+=====================================================================
+  PROJECT PAGE  ·  Probing Low Frame Rate Degradation in Neural Audio Codecs
+=====================================================================
+
+  HOW TO FILL IN YOUR AUDIO
+  -------------------------
+  Put your .wav / .m4a / .opus files in a folder named  samples/  next to
+  this index.html, using these exact filenames (or edit the src= paths below):
+
+    samples/
+      ref.wav                  <- ground-truth reference utterance
+      fr100.wav                <- matched-K reconstruction @ 100 Hz
+      fr50.wav                 <- matched-K reconstruction @ 50 Hz
+      fr25.wav                 <- matched-K reconstruction @ 25 Hz
+      fr12_5.wav               <- matched-K reconstruction @ 12.5 Hz
+      fr6_25_K.wav             <- matched-K reconstruction @ 6.25 Hz  (recovered)
+      fr6_25_T.wav             <- fixed-T_clip reconstruction @ 6.25 Hz (collapsed)
+      fr3_125.wav              <- matched-K reconstruction @ 3.125 Hz
+      fr1_6.wav                <- matched-K reconstruction @ 1.6 Hz
+
+  Use the SAME spoken sentence for every file so the comparison is fair, and
+  normalize loudness across files. Convert WAV -> Opus/m4a to keep the page light:
+      ffmpeg -i in.wav -c:a libopus -b:a 32k samples/out.opus
+
+  THEN FILL IN THESE LINKS  (search for  TODO:  below)
+  ----------------------------------------------------
+    - paper PDF / arXiv url
+    - GitHub repo url
+    - HuggingFace models url
+    - BibTeX (replace once you have the proceedings entry)
+=====================================================================
+-->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Probing Low Frame Rate Degradation in Neural Audio Codecs</title>
+<meta name="description" content="Project page and audio samples for 'Probing Low Frame Rate Degradation in Neural Audio Codecs', Interspeech 2026.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Spectral:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --bg:        #fbfbfc;
+    --panel:     #ffffff;
+    --ink:       #16181d;
+    --ink-soft:  #555a66;
+    --hair:      #e4e6ec;
+    --blue:      #2f5fd0;   /* fixed T_clip  (matches the paper figure) */
+    --blue-bg:   #eef2fc;
+    --amber:     #c4760a;   /* fixed K       (matches the paper figure) */
+    --amber-bg:  #fdf3e3;
+    --display: "Space Grotesk", system-ui, sans-serif;
+    --body:    "Spectral", Georgia, serif;
+    --mono:    "IBM Plex Mono", ui-monospace, monospace;
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: 18px;
+    line-height: 1.6;
+  }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 0 24px; }
+
+  a { color: var(--blue); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  :focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; border-radius: 3px; }
+
+  /* ---------- header ---------- */
+  header { padding: 64px 0 40px; border-bottom: 1px solid var(--hair); }
+  .badge {
+    font-family: var(--mono);
+    font-size: 12.5px; letter-spacing: .08em; text-transform: uppercase;
+    color: var(--amber); font-weight: 600;
+    display: inline-flex; align-items: center; gap: 10px; margin-bottom: 22px;
+  }
+  .badge .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--amber); }
+
+  h1 {
+    font-family: var(--display); font-weight: 700;
+    font-size: clamp(30px, 5.2vw, 46px); line-height: 1.08;
+    letter-spacing: -0.02em; margin: 0 0 26px;
+  }
+  .authors { font-family: var(--display); font-weight: 500; font-size: 19px; margin: 0 0 4px; }
+  .authors sup { color: var(--amber); font-weight: 600; }
+  .affil { font-size: 16px; color: var(--ink-soft); margin: 0 0 28px; font-style: italic; }
+
+  .links { display: flex; flex-wrap: wrap; gap: 10px; }
+  .links a {
+    font-family: var(--display); font-weight: 500; font-size: 15px;
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 9px 16px; border: 1px solid var(--ink); border-radius: 999px;
+    color: var(--ink); transition: background .15s, color .15s;
+  }
+  .links a:hover { background: var(--ink); color: #fff; text-decoration: none; }
+  .links a svg { width: 15px; height: 15px; }
+
+  /* ---------- sections ---------- */
+  section { padding: 48px 0; border-bottom: 1px solid var(--hair); }
+  .eyebrow {
+    font-family: var(--mono); font-size: 12.5px; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--ink-soft); margin: 0 0 14px;
+  }
+  h2 {
+    font-family: var(--display); font-weight: 600;
+    font-size: clamp(22px, 3.4vw, 28px); letter-spacing: -0.01em; margin: 0 0 18px;
+  }
+  .abstract p { margin: 0; max-width: 64ch; }
+  .lede { color: var(--ink-soft); font-size: 17px; max-width: 62ch; margin: 0 0 28px; }
+
+  /* ---------- frame-rate motif ---------- */
+  .motif { display: block; width: 100%; height: 44px; margin: 6px 0 30px; }
+
+  /* ---------- audio table ---------- */
+  .samples { display: grid; gap: 10px; }
+  .row {
+    display: grid;
+    grid-template-columns: 92px 1fr auto;
+    align-items: center; gap: 18px;
+    padding: 14px 18px; background: var(--panel);
+    border: 1px solid var(--hair); border-radius: 12px;
+  }
+  .row .fr {
+    font-family: var(--mono); font-weight: 600; font-size: 16px;
+    color: var(--ink); white-space: nowrap;
+  }
+  .row .fr small { display: block; font-weight: 400; font-size: 11px; color: var(--ink-soft); letter-spacing: .02em; }
+  .row .meta { font-family: var(--mono); font-size: 12.5px; color: var(--ink-soft); line-height: 1.5; }
+  .row .meta b { color: var(--ink); font-weight: 600; }
+  .row audio { height: 36px; width: 240px; max-width: 42vw; }
+
+  .row.ref { border-color: var(--ink); }
+  .row.ref .fr { color: var(--ink); }
+
+  /* the hero A/B comparison */
+  .cliff {
+    margin: 26px 0 8px; padding: 4px; border-radius: 16px;
+    background: linear-gradient(90deg, var(--blue-bg), var(--amber-bg));
+  }
+  .cliff-inner { background: var(--panel); border-radius: 13px; padding: 22px; border: 1px solid var(--hair); }
+  .cliff h3 { font-family: var(--display); font-weight: 600; font-size: 19px; margin: 0 0 4px; }
+  .cliff .sub { font-size: 15px; color: var(--ink-soft); margin: 0 0 20px; max-width: 60ch; }
+  .ab { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .ab .card { padding: 16px; border-radius: 11px; border: 1px solid var(--hair); }
+  .ab .card.bad  { background: var(--blue-bg);  border-color: #cfdaf5; }
+  .ab .card.good { background: var(--amber-bg); border-color: #f0dcb6; }
+  .ab .tag { font-family: var(--mono); font-size: 12px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; margin: 0 0 3px; }
+  .ab .card.bad  .tag { color: var(--blue); }
+  .ab .card.good .tag { color: var(--amber); }
+  .ab .desc { font-size: 14px; color: var(--ink-soft); margin: 0 0 12px; min-height: 2.6em; }
+  .ab audio { width: 100%; height: 36px; }
+  .ab .nums { font-family: var(--mono); font-size: 12px; color: var(--ink-soft); margin: 11px 0 0; }
+  .ab .nums b { color: var(--ink); }
+
+  /* ---------- bibtex ---------- */
+  pre {
+    font-family: var(--mono); font-size: 13.5px; line-height: 1.55;
+    background: #15171c; color: #e8eaf0; padding: 20px 22px;
+    border-radius: 12px; overflow-x: auto; margin: 0;
+  }
+  .copy-btn {
+    font-family: var(--display); font-size: 13px; font-weight: 500;
+    background: none; border: 1px solid var(--hair); border-radius: 8px;
+    padding: 6px 12px; cursor: pointer; color: var(--ink-soft); margin-bottom: 12px;
+  }
+  .copy-btn:hover { border-color: var(--ink); color: var(--ink); }
+
+  footer { padding: 36px 0 64px; color: var(--ink-soft); font-size: 14px; }
+  footer p { margin: 0 0 8px; max-width: 70ch; }
+
+  @media (max-width: 620px) {
+    .row { grid-template-columns: 76px 1fr; }
+    .row .meta { grid-column: 1 / -1; }
+    .row audio { width: 100%; max-width: none; }
+    .ab { grid-template-columns: 1fr; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .motif .bar { animation: none !important; }
+  }
+</style>
+
+<div class="wrap">
+
+  <header>
+    <span class="badge"><span class="dot"></span>Interspeech 2026 · Sydney</span>
+    <h1>Probing Low Frame Rate Degradation in Neural Audio Codecs</h1>
+    <p class="authors">Alex Gichamba<sup>1</sup> &nbsp; Moise Busogi<sup>1</sup></p>
+    <p class="affil"><sup>1</sup> Carnegie Mellon University Africa, Rwanda</p>
+    <nav class="links">
+      <!-- TODO: replace # with your real URLs -->
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>Paper (PDF)</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>arXiv</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>Code</a>
+      <a href="#">&#129303;&nbsp;Models</a>
+    </nav>
+  </header>
+
+  <section class="abstract">
+    <p class="eyebrow">Abstract</p>
+    <p>Low frame rates in neural audio codecs are attractive for autoregressive speech synthesis, where generation cost scales linearly with sequence length. Recent work shows codecs can operate at 12.5&nbsp;Hz and below, but the mechanisms behind low frame rate degradation remain insufficiently understood. We investigate them through a controlled frame rate ablation. We reproduce a quality cliff at 6.25&nbsp;Hz reported in prior work and evaluate two candidate explanations, phonemic collision and codebook saturation, neither of which shows evidence of a fundamental barrier. The cliff is instead caused by a training misconfiguration: a fixed clip duration yields too few tokens at low frame rates, starving the decoder of inter-token context. Once corrected, word error rate degrades smoothly with phonemic load down to 3.1&nbsp;Hz and 1.6&nbsp;Hz, suggesting the efficiency gains of low frame rate codecs are more accessible than previously assumed.</p>
+  </section>
+
+  <section>
+    <p class="eyebrow">Listen · the core finding</p>
+    <h2>Hearing the frame rate cliff</h2>
+    <p class="lede">Standard training keeps a fixed clip duration, so at 6.25&nbsp;Hz each clip is only two tokens long and the decoder never learns to span token boundaries. Matching the token count instead recovers intelligibility at the same frame rate and bitrate. You can hear the difference.</p>
+
+    <!-- signature motif: frames thinning out as the rate drops -->
+    <svg class="motif" viewBox="0 0 880 44" preserveAspectRatio="none" aria-hidden="true">
+      <g fill="var(--blue)" opacity="0.85">
+        <rect class="bar" x="0"   y="6" width="3" height="32"/><rect x="10" y="10" width="3" height="24"/>
+        <rect x="20" y="4" width="3" height="36"/><rect x="30" y="12" width="3" height="20"/>
+        <rect x="40" y="8" width="3" height="28"/><rect x="50" y="14" width="3" height="16"/>
+        <rect x="62" y="6" width="3" height="32"/><rect x="74" y="11" width="3" height="22"/>
+        <rect x="88" y="9" width="3" height="26"/><rect x="104" y="13" width="3" height="18"/>
+        <rect x="122" y="7" width="3" height="30"/><rect x="142" y="12" width="3" height="20"/>
+        <rect x="166" y="9" width="3" height="26"/><rect x="194" y="11" width="3" height="22"/>
+        <rect x="226" y="8" width="3" height="28"/><rect x="262" y="12" width="3" height="20"/>
+      </g>
+      <g fill="var(--amber)" opacity="0.85">
+        <rect x="320" y="10" width="3" height="24"/><rect x="380" y="8" width="3" height="28"/>
+        <rect x="450" y="11" width="3" height="22"/><rect x="530" y="9" width="3" height="26"/>
+        <rect x="620" y="10" width="3" height="24"/><rect x="720" y="9" width="3" height="26"/>
+        <rect x="830" y="10" width="3" height="24"/>
+      </g>
+    </svg>
+
+    <div class="cliff">
+      <div class="cliff-inner">
+        <h3>6.25&nbsp;Hz · same model, same bitrate (750&nbsp;bps), one training change</h3>
+        <p class="sub">Both clips reconstruct the same utterance at 6.25&nbsp;Hz. Only the training-time token count differs.</p>
+        <div class="ab">
+          <div class="card bad">
+            <p class="tag">Fixed T&#8202;<sub>clip</sub> = 0.38&nbsp;s</p>
+            <p class="desc">Standard DAC recipe. Two tokens per clip during training &rarr; collapse.</p>
+            <audio controls preload="none" src="samples/fr6_25_T.wav"></audio>
+            <p class="nums">WER <b>107.4%</b> · STOI <b>0.46</b> · MCD <b>20.17</b></p>
+          </div>
+          <div class="card good">
+            <p class="tag">Fixed K = 19 tokens</p>
+            <p class="desc">Matched sequence length. Near parity with the 12.5&nbsp;Hz baseline at half the bitrate.</p>
+            <audio controls preload="none" src="samples/fr6_25_K.wav"></audio>
+            <p class="nums">WER <b>15.4%</b> · STOI <b>0.89</b> · MCD <b>3.72</b></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <p class="eyebrow">Listen · the full sweep</p>
+    <h2>Reconstructions across frame rates</h2>
+    <p class="lede">Matched-token (K&nbsp;=&nbsp;19) DAC reconstructions of one utterance from LibriSpeech <span style="font-family:var(--mono);font-size:.85em">test-clean</span>. Intelligibility falls off smoothly with phonemic load all the way to 1.6&nbsp;Hz (192&nbsp;bps).</p>
+
+    <div class="samples">
+      <div class="row ref">
+        <span class="fr">Reference<small>ground truth</small></span>
+        <span class="meta">original 16&nbsp;kHz audio</span>
+        <audio controls preload="none" src="samples/ref.wav"></audio>
+      </div>
+      <div class="row">
+        <span class="fr">100 Hz<small>12 kbps</small></span>
+        <span class="meta"><b>WER 5.0%</b> · STOI 0.98 · SPK 0.96</span>
+        <audio controls preload="none" src="samples/fr100.wav"></audio>
+      </div>
+      <div class="row">
+        <span class="fr">50 Hz<small>6 kbps · DAC</small></span>
+        <span class="meta"><b>WER 5.4%</b> · STOI 0.97 · SPK 0.93</span>
+        <audio controls preload="none" src="samples/fr50.wav"></audio>
+      </div>
+      <div class="row">
+        <span class="fr">25 Hz<small>3 kbps</small></span>
+        <span class="meta"><b>WER 5.8%</b> · STOI 0.95 · SPK 0.90</span>
+        <audio controls preload="none" src="samples/fr25.wav"></audio>
+      </div>
+      <div class="row">
+        <span class="fr">12.5 Hz<small>1.5 kbps</small></span>
+        <span class="meta"><b>WER 7.2%</b> · STOI 0.93 · SPK 0.82</span>
+        <audio controls preload="none" src="samples/fr12_5.wav"></audio>
+      </div>
+      <div class="row">
+        <span class="fr">6.25 Hz<small>750 bps</small></span>
+        <span class="meta"><b>WER 15.4%</b> · STOI 0.89 · SPK 0.62</span>
+        <audio controls preload="none" src="samples/fr6_25_K.wav"></audio>
+      </div>
+      <div class="row">
+        <span class="fr">3.125 Hz<small>375 bps</small></span>
+        <span class="meta"><b>WER 29.4%</b> · STOI 0.84 · SPK 0.48</span>
+        <audio controls preload="none" src="samples/fr3_125.wav"></audio>
+      </div>
+      <div class="row">
+        <span class="fr">1.6 Hz<small>192 bps</small></span>
+        <span class="meta"><b>WER 63.2%</b> · STOI 0.76 · SPK 0.32</span>
+        <audio controls preload="none" src="samples/fr1_6.wav"></audio>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <p class="eyebrow">Cite</p>
+    <h2>BibTeX</h2>
+    <button class="copy-btn" onclick="navigator.clipboard.writeText(document.getElementById('bib').textContent).then(()=>{this.textContent='Copied';setTimeout(()=>this.textContent='Copy',1500)})">Copy</button>
+    <pre id="bib">@inproceedings{gichamba2026probing,
+  title     = {Probing Low Frame Rate Degradation in Neural Audio Codecs},
+  author    = {Gichamba, Alex and Busogi, Moise},
+  booktitle = {Proc. Interspeech 2026},
+  year      = {2026},
+  address   = {Sydney, Australia}
+}</pre>
+  </section>
+
+  <footer>
+    <p>This work is part of the African Engineering and Technology Network (Afretec), managed by Carnegie Mellon University Africa with financial support from the Mastercard Foundation. It used Bridges2 at the Pittsburgh Supercomputing Center through allocation CIS250700 from the ACCESS program.</p>
+    <p>Audio samples are decoded reconstructions provided for demonstration. Metrics are reported on LibriSpeech test-clean.</p>
+  </footer>
+
+</div>
