@@ -1,0 +1,31 @@
+$include:
+  - conf/final/16khz.yml
+
+# Override rates to match 100Hz
+# default rates are [2, 4, 5, 8] for encoder and [8, 5, 4, 2] for decoder, which correspond to a total downsampling factor of 320 (16000 / 320 = 50 Hz)
+# To achieve 100 Hz, we need a total downsampling factor of 160 (16000 / 160 = 100 Hz)
+DAC.encoder_rates: [2, 2, 5, 8]
+DAC.decoder_rates: [8, 5, 2, 2]
+num_iters: 100000
+save_iters: [10000, 50000, 100000]
+valid_freq: 10000
+
+train/AudioDataset.duration: 0.4
+
+# Override data paths
+train/build_dataset.folders:
+  speech:
+    - ./data/librispeech/train-clean-100
+
+val/build_dataset.folders:
+  speech:
+    - ./data/librispeech/dev-clean
+
+test/build_dataset.folders:
+  speech:
+    - ./data/librispeech/test-clean
+
+# Adjust batch size based on your GPU memory
+batch_size: 32
+val_batch_size: 32
+num_workers: 4

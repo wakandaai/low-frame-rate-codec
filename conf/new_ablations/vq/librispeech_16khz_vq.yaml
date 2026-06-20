@@ -1,0 +1,30 @@
+# conf/librispeech_16khz.yml
+$include:
+  - conf/final/16khz.yml
+
+# Override to use single codebook
+DAC.n_codebooks: 1
+
+num_iters: 100000
+save_iters: [10000, 50000, 100000]
+valid_freq: 10000
+
+train/AudioDataset.duration: 0.4
+
+# Override data paths
+train/build_dataset.folders:
+  speech:
+    - ./data/librispeech/train-clean-100
+
+val/build_dataset.folders:
+  speech:
+    - ./data/librispeech/dev-clean
+
+test/build_dataset.folders:
+  speech:
+    - ./data/librispeech/test-clean
+
+# Adjust batch size based on your GPU memory
+batch_size: 32
+val_batch_size: 32
+num_workers: 4
