@@ -193,11 +193,10 @@
     <p class="authors">Alex Gichamba<sup>1</sup> &nbsp; Moise Busogi<sup>1</sup></p>
     <p class="affil"><sup>1</sup> Carnegie Mellon University Africa, Rwanda</p>
     <nav class="links">
-      <!-- TODO: replace # with your real URLs -->
-      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>Paper (PDF)</a>
-      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>arXiv</a>
-      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>Code</a>
-      <a href="#">&#129303;&nbsp;Models</a>
+      <a href="https://arxiv.org/abs/2606.16969"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>arXiv</a>
+      <a href="low_frame_rate_codec.pdf"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>Paper (PDF)</a>
+      <a href="https://github.com/wakandaai/low-frame-rate-codec"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>Code</a>
+      <a href="#">&#129303;&nbsp;Models [TBD]</a>
     </nav>
   </header>
 
@@ -207,7 +206,7 @@
   </section>
 
   <section>
-    <p class="eyebrow">Listen · the core finding</p>
+    <p class="eyebrow">Listen</p>
     <h2>Hearing the frame rate cliff</h2>
     <p class="lede">Standard training keeps a fixed clip duration, so at 6.25&nbsp;Hz each clip is only two tokens long and the decoder never learns to span token boundaries. Matching the token count instead recovers intelligibility at the same frame rate and bitrate. You can hear the difference.</p>
 
@@ -239,13 +238,13 @@
           <div class="card bad">
             <p class="tag">Fixed T&#8202;<sub>clip</sub> = 0.38&nbsp;s</p>
             <p class="desc">Standard DAC recipe. Two tokens per clip during training &rarr; collapse.</p>
-            <audio controls preload="none" src="samples/fr6_25_T.wav"></audio>
+            <audio controls preload="none" src="samples/fixed_T_2094-142345-0054.flac"></audio>
             <p class="nums">WER <b>107.4%</b> · STOI <b>0.46</b> · MCD <b>20.17</b></p>
           </div>
           <div class="card good">
             <p class="tag">Fixed K = 19 tokens</p>
             <p class="desc">Matched sequence length. Near parity with the 12.5&nbsp;Hz baseline at half the bitrate.</p>
-            <audio controls preload="none" src="samples/fr6_25_K.wav"></audio>
+            <audio controls preload="none" src="samples/fixed_K_2094-142345-0054.flac"></audio>
             <p class="nums">WER <b>15.4%</b> · STOI <b>0.89</b> · MCD <b>3.72</b></p>
           </div>
         </div>
@@ -262,42 +261,42 @@
       <div class="row ref">
         <span class="fr">Reference<small>ground truth</small></span>
         <span class="meta">original 16&nbsp;kHz audio</span>
-        <audio controls preload="none" src="samples/ref.wav"></audio>
+        <audio controls preload="none" src="samples/ref_2094-142345-0054.flac"></audio>
       </div>
       <div class="row">
         <span class="fr">100 Hz<small>12 kbps</small></span>
         <span class="meta"><b>WER 5.0%</b> · STOI 0.98 · SPK 0.96</span>
-        <audio controls preload="none" src="samples/fr100.wav"></audio>
+        <audio controls preload="none" src="samples/100Hz_2094-142345-0054.flac"></audio>
       </div>
       <div class="row">
         <span class="fr">50 Hz<small>6 kbps · DAC</small></span>
         <span class="meta"><b>WER 5.4%</b> · STOI 0.97 · SPK 0.93</span>
-        <audio controls preload="none" src="samples/fr50.wav"></audio>
+        <audio controls preload="none" src="samples/50Hz_2094-142345-0054.flac"></audio>
       </div>
       <div class="row">
         <span class="fr">25 Hz<small>3 kbps</small></span>
         <span class="meta"><b>WER 5.8%</b> · STOI 0.95 · SPK 0.90</span>
-        <audio controls preload="none" src="samples/fr25.wav"></audio>
+        <audio controls preload="none" src="samples/25Hz_2094-142345-0054.flac"></audio>
       </div>
       <div class="row">
         <span class="fr">12.5 Hz<small>1.5 kbps</small></span>
         <span class="meta"><b>WER 7.2%</b> · STOI 0.93 · SPK 0.82</span>
-        <audio controls preload="none" src="samples/fr12_5.wav"></audio>
+        <audio controls preload="none" src="samples/12-5Hz_2094-142345-0054.flac"></audio>
       </div>
       <div class="row">
         <span class="fr">6.25 Hz<small>750 bps</small></span>
         <span class="meta"><b>WER 15.4%</b> · STOI 0.89 · SPK 0.62</span>
-        <audio controls preload="none" src="samples/fr6_25_K.wav"></audio>
+        <audio controls preload="none" src="samples/6-25Hz_2094-142345-0054.flac"></audio>
       </div>
       <div class="row">
         <span class="fr">3.125 Hz<small>375 bps</small></span>
         <span class="meta"><b>WER 29.4%</b> · STOI 0.84 · SPK 0.48</span>
-        <audio controls preload="none" src="samples/fr3_125.wav"></audio>
+        <audio controls preload="none" src="samples/3-1Hz_2094-142345-0054.flac"></audio>
       </div>
       <div class="row">
         <span class="fr">1.6 Hz<small>192 bps</small></span>
         <span class="meta"><b>WER 63.2%</b> · STOI 0.76 · SPK 0.32</span>
-        <audio controls preload="none" src="samples/fr1_6.wav"></audio>
+        <audio controls preload="none" src="samples/1-6Hz_2094-142345-0054.flac"></audio>
       </div>
     </div>
   </section>
